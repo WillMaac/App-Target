@@ -12,15 +12,13 @@
         "backgroundColor": "#3D44CD"
       }
     },
-
-"ios": {
+    "ios": {
       "bundleIdentifier": "com.andersonj.target",
       "icon": "./assets/ios-icon.png"
     },
-
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "expo-font"
     ]
-
   }
 }
