@@ -11,9 +11,16 @@ export const styles = StyleSheet.create({
         paddingBottom: 18,
         gap: 24,
     },
+
     label:{
         fontSize: 12,
         color: colors.white,
         fontFamily: fontFamily.regular,
     },
+
+total:{
+    fontSize: 32,
+    color: colors.white,
+    fontFamily: fontFamily.medium
+}
 })
