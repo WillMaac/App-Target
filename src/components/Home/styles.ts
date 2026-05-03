@@ -22,5 +22,13 @@ total:{
     fontSize: 32,
     color: colors.white,
     fontFamily: fontFamily.medium
+},
+
+summary:{
+    width: "100%",
+    gap: 12,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    
 }
 })
