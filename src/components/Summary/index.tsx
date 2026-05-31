@@ -2,7 +2,7 @@ import { ColorValue, Text, View } from "react-native"
 import { styles } from "./styles"
 import { MaterialIcons } from "@expo/vector-icons"
 
-type SummaryProps={
+export type SummaryProps={
     label: string,
     value: string
 }
