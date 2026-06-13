@@ -28,7 +28,7 @@ export default function Index() {
         id: String(item.id),
         name: item.name,
         current: numberToCurrency(item.current),
-        percentage: `${Number(item.percentage).toFixed(0)}%`,
+        percentage: item.percentage.toFixed(0) + "%",
         target: numberToCurrency(item.amount),
       }));
     } catch (error) {

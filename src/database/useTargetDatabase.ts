@@ -46,23 +46,27 @@ export function useTargetDatabase() {
   `);
   }
 
-  function show() {
-    return database.getFirstAsync<TargetResponse>(`
-      SELECT 
-  targets.id,
-  targets.name,
-  targets.amount,
-  COALESCE(SUM(transactions.amount), 0) AS current,
-  COALESCE(SUM((transactions.amount) / targets.amount) * 100 , 0) AS percentage,
-  targets.created_at,
-  targets.updated_at
+  async function show(id: number): Promise<TargetResponse> {
+  const response = await database.getFirstAsync<TargetResponse>(`
+    SELECT
+      targets.id,
+      targets.name,
+      targets.amount,
+      COALESCE(SUM(transactions.amount), 0) AS current,
+      COALESCE(SUM(transactions.amount / targets.amount) * 100, 0) AS percentage,
+      targets.created_at,
+      targets.updated_at
+    FROM targets
+    LEFT JOIN transactions
+      ON targets.id = transactions.target_id
+    WHERE targets.id = ${id}
+  `);
 
-  FROM targets
-  LEFT JOIN transactions ON targets.id = transactions.target_id
-  WHERE targets.id = ${id}
-      `);
+  if (!response) {
+    throw new Error("Meta não encontrada");
   }
-
+   return response
+}
   return {
     show,
     create,
