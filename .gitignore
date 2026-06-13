@@ -34,3 +34,8 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+#Banco de daos
+*.db
+*.sqlite
+*.sqlite3

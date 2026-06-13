@@ -1,29 +1,32 @@
-import { MaterialIcons } from '@expo/vector-icons';
-import { styles } from './styles';
-import { colors } from '@/theme';
-import { ColorValue, Pressable, PressableProps, Text } from 'react-native';
+import {styles} from "./styles"
+import {colors} from '@/theme'
+import {Opition} from './option'
+import {TransactionTypes} from "@/utils/TransactionsTypes"
+import { View } from "react-native";
 
-type Props = PressableProps & {
-  isSelected: boolean;
-  title: string;
-  icon: keyof typeof MaterialIcons.glyphMap;
-  selectedColor: ColorValue;
-};
+type Props={
+  selected: TransactionTypes
+  onChange:(type: TransactionTypes) => void
+}
 
-export function Opition({
-  isSelected,
-  title,
-  icon,
-  selectedColor,
-  ...rest
-}: Props) {
-  return (
-    <Pressable
-      style={[styles.option, isSelected && { backgroundColor: selectedColor }]}
-      {...rest}
-    >
-      <MaterialIcons name={icon} size={24} color={isSelected ? colors.white : colors.gray[500]} />
-      <Text style={[styles.title, isSelected && {color: colors.white} ]}>{title}</Text>
-    </Pressable>
-  );
+export function TransactionType({selected, onChange}:Props){
+  return(
+    <View style={styles.container}>
+      <Opition
+      icon="arrow-upward"
+      title="Guardar"
+      isSelected={selected === TransactionTypes.Input}
+      selectedColor={colors.blue[500]}
+      onPress={()=> onChange(TransactionTypes.Input)}
+      />
+
+      <Opition
+      icon="arrow-downward"
+      title="Resgatar"
+      isSelected={selected === TransactionTypes.Output}
+      selectedColor={colors.red[400]}
+      onPress={()=> onChange(TransactionTypes.Output)}
+      />
+    </View>
+  )
 }

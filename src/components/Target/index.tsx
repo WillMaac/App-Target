@@ -3,6 +3,7 @@ import {styles} from "./styles"
 import {MaterialIcons} from "@expo/vector-icons";
 
 export type TargetProps = {
+  id: string
     percentage: string
     current: string
     target: string
