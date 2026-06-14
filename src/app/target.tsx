@@ -3,7 +3,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { Alert, View } from 'react-native';
 import { Button } from '@/components/Button';
 import { CurrencyInput } from '@/components/CurrencyInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useTargetDatabase } from '@/database/useTargetDatabase';
 
@@ -25,14 +25,31 @@ export default function Target() {
     setProcessing(true);
 
     if (params.id) {
+      updete();
     } else {
       create();
     }
   }
 
+  async function updete() {
+    try {
+      await targetDatabase.update({ id: Number(params.id), name, amount });
+      Alert.alert('Sucesso!', 'Meta atualizada com sucesso!', [
+        {
+          text: 'Ok',
+          onPress: () => router.back(),
+        },
+      ]);
+    } catch (error) {
+      Alert.alert('Não foi possível atualizar a meta.');
+      console.log(error);
+      setProcessing(false);
+    }
+  }
+
   async function create() {
     try {
-      await targetDatabase.create({ name, amount })
+      await targetDatabase.create({ name, amount });
 
       Alert.alert('Nova Meta', 'Meta criada com sucesso!', [
         {
@@ -47,6 +64,21 @@ export default function Target() {
     }
   }
 
+  async function fetcDetails(id: number) {
+    try {
+      const response = await targetDatabase.show(id);
+      setName(response.name);
+      setAmount(response.amount);
+    } catch (error) {
+      Alert.alert('Não foi possível carregar os detalhes da meta.');
+      console.log(error);
+    }
+  }
+  useEffect(() => {
+    if (params.id) {
+      fetcDetails(Number(params.id));
+    }
+  }, [params.id]);
   return (
     <View style={{ flex: 1, padding: 24 }}>
       <PageHeader
