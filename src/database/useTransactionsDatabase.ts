@@ -6,6 +6,14 @@ export type TransactionCreate = {
   observation?: string;
 };
 
+export type TransactionsResponse = {
+  id: number;
+  target_id: number;
+  amount: number;
+  observation: string;
+  created_at: Date;
+};
+
 export function useTransactionsDataBase() {
   const database = useSQLiteContext();
 
@@ -22,7 +30,25 @@ export function useTransactionsDataBase() {
     );
   }
 
+  async function listByTargetId(id: number) {
+    return await database.getAllAsync<TransactionsResponse>(
+      `
+      SELECT
+        id,
+        target_id,
+        amount,
+        observation,
+        created_at
+      FROM transactions
+      WHERE target_id = ?
+      ORDER BY created_at DESC
+      `,
+      id
+    );
+  }
+
   return {
     create,
+    listByTargetId,
   };
 }
