@@ -14,6 +14,10 @@ export type TargetResponse = {
   updated_at: Date;
 };
 
+export type TargetUpdate = TargetCreate & {
+  id: number;
+};
+
 export function useTargetDatabase() {
   const database = useSQLiteContext();
   async function create(data: TargetCreate) {
@@ -47,7 +51,7 @@ export function useTargetDatabase() {
   }
 
   async function show(id: number): Promise<TargetResponse> {
-  const response = await database.getFirstAsync<TargetResponse>(`
+    const response = await database.getFirstAsync<TargetResponse>(`
     SELECT
       targets.id,
       targets.name,
@@ -62,14 +66,32 @@ export function useTargetDatabase() {
     WHERE targets.id = ${id}
   `);
 
-  if (!response) {
-    throw new Error("Meta não encontrada");
+    if (!response) {
+      throw new Error('Meta não encontrada');
+    }
+    return response;
   }
-   return response
-}
+
+  async function update(data: TargetUpdate) {
+    const statement = await database.prepareSync(`
+  UPDATE targets SET 
+  name = $name,
+  amount = $amount,
+  updated_at = CURRENT_TIMESTAMP
+  WHERE id = $id
+  `);
+
+    statement.executeAsync({
+      $id: data.id,
+      $name: data.name,
+      $amount: data.amount,
+    });
+  }
+
   return {
     show,
     create,
+    update,
     listBySavedValue,
   };
 }
