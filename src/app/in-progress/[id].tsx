@@ -9,11 +9,9 @@ import { useTransactionsDataBase } from '@/database/useTransactionsDatabase';
 import { numberToCurrency } from '@/utils/numberToCurrency';
 import { TransactionTypes } from '@/utils/TransactionsTypes';
 import { router, useFocusEffect, useLocalSearchParams } from 'expo-router';
-import { ImportMetaRegistry } from 'expo/build/winter/ImportMetaRegistry';
 import { useCallback, useState } from 'react';
 import { Alert, View } from 'react-native';
-
-
+import dayjs from "dayjs";
 
 export default function InProgress() {
   const [isFetching, setIsFetching] = useState(true);
@@ -49,26 +47,27 @@ export default function InProgress() {
     try {
       const response = await transactionsDatabase.listByTargetId(
         Number(params.id),
-    );
+      );
 
       setTransactions(
-        response.map((item)=> ({
+        response.map((item) => ({
           id: String(item.id),
           value: numberToCurrency(item.amount),
-          date: String(item.created_at),
+          date: dayjs(item.created_at).format("DD/MM/YYYY [ás] HH:mm"),
           description: item.observation,
-          type: item.amount < 0 ? TransactionTypes.Output : TransactionTypes.Input
-        }))
-      )
+          type:
+            item.amount < 0 ? TransactionTypes.Output : TransactionTypes.Input,
+        })),
+      );
     } catch (error) {
-      Alert.alert('Erro', "Não foi possível carregar as transações.");
+      Alert.alert('Erro', 'Não foi possível carregar as transações.');
       console.log(error);
     }
   }
 
   async function fetchData() {
     const fetchDetailsPromise = fetchDetails();
-    const fetchTransitionsPromise = fetchTransitions() 
+    const fetchTransitionsPromise = fetchTransitions();
 
     await Promise.all([fetchDetailsPromise, fetchTransitionsPromise]);
     setIsFetching(false);
